@@ -1,0 +1,16 @@
+{
+  "name": "madewithcode",
+  "version": "1.0.0",
+  "description": "To create the folder for the next day all you have to do is run:",
+  "main": "new.js",
+  "scripts": {
+    "build": "tsc",
+    "new": "node shared/new.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "sftchance",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "pnpm": "^8.6.2"
+  }
+}
