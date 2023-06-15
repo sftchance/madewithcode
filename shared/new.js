@@ -2,52 +2,30 @@ const fs = require('fs');
 
 const { exec } = require('child_process');
 
-const getFolders = (dir) => {
-    return fs.readdirSync(dir)
-        .filter(file => fs.statSync(`${dir}/${file}`).isDirectory());
+const onExecute = (err, stdout, stderr) => {
+    if (err) {
+        console.log(err);
+        return;
     }
 
-const folders = getFolders('./');
+    if (stdout)
+        console.log(stdout);
+
+    if (stderr)
+        console.log(stderr);
+};
+
+const folders = fs.readdirSync('./')
+    .filter(file => fs.statSync(`./${file}`).isDirectory());
 
 const highest = folders.reduce((acc, folder) => {
-    const number = parseInt(folder.split('-')[0]);
+    const number = parseInt(folder);
+    
     return number > acc ? number : acc;
 }, 0);
 
 const next = `${(highest + 1).toString().padStart(3, '0')}`;
 
-exec(`cp -r ./shared/template/ ./${next}`, (err, stdout, stderr) => {
-    if (err) {
-        console.log(err);
-        return;
-    }
-
-    console.log(stdout);
-    
-    if (stderr)
-        console.log(stderr);
-});
-
-exec(`cd ./${next}`, (err, stdout, stderr) => {
-    if (err) {
-        console.log(err);
-        return;
-    }
-
-    console.log(stdout);
-    
-    if (stderr)
-        console.log(stderr);
-});
-
-exec(`pnpm i`, (err, stdout, stderr) => {
-    if (err) {
-        console.log(err);
-        return;
-    }
-
-    console.log(stdout);
-    
-    if (stderr)
-        console.log(stderr);
-});
+exec(`cp -r ./shared/template/ ./${next}`, onExecute);
+exec(`cd ./${next}`, onExecute);
+exec(`pnpm i`, onExecute);
