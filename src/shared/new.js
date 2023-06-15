@@ -15,8 +15,8 @@ const onExecute = (err, stdout, stderr) => {
         console.log(stderr);
 };
 
-const folders = fs.readdirSync('./')
-    .filter(file => fs.statSync(`./${file}`).isDirectory());
+const folders = fs.readdirSync('./src/')
+    .filter(file => fs.statSync(`./src/${file}`).isDirectory());
 
 const highest = folders.reduce((acc, folder) => {
     const number = parseInt(folder);
@@ -26,6 +26,6 @@ const highest = folders.reduce((acc, folder) => {
 
 const next = `${(highest + 1).toString().padStart(3, '0')}`;
 
-exec(`cp -r ./shared/template/ ./${next}`, onExecute);
-exec(`cd ./${next}`, onExecute);
+exec(`cp -r ./src/shared/template/ ./src/${next}`, onExecute);
+exec(`cd ./src/${next}`, onExecute);
 exec(`pnpm i`, onExecute);

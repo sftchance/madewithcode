@@ -5,7 +5,7 @@
   "main": "new.js",
   "scripts": {
     "build": "tsc",
-    "new": "node shared/new.js",
+    "new": "node src/shared/new.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "sftchance",

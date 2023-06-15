@@ -16,21 +16,6 @@ But, by learning with the help of the template you:
 - ✅ Only have to run one command to have a Sandbox experience.
 - 🧠 Have the ability to reference the things you learned in previous days.
 
-## Dependencies
+## Days
 
-The base of the framework has been built using:
-
-- ⬆️ Vite
-- 👁️ React
-- 🖼️ Framer Motion
-
-## Creating A New Sandbox
-
-To create the folder for the next day all you have to do is run:
-
-```bash
-npm i | pnpm i
-pnpm run new
-```
-
-This will automatically create a new vite project for you with everything you need done. Once it's created, you will automatically be taken into the directory and you can begin working on the scratch-pad.
+- #[000](./src/000/) - "Transform cards on enter/exit of viewport with scroll."
