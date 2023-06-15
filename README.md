@@ -1,14 +1,14 @@
 # ⚪ madewithcode
 
-This repository contains the source code for the daily explorations by ⚪ madewithcode. Serving as a library of knowledge for developers to learn how to implement designs, the majority of content remains open-sourced.
+This repository contains the source code for the daily explorations by [⚪ madewithcode](https://twitter.com/designedcode). Serving as a library of knowledge for developers to learn how to implement designs, the majority of content remains open-sourced and can be used anywhere in your projects.
 
-Following a consistent template to make things easy, you can get up and running in just a few seconds.
+> Although providing credit or including a tag is appreciated, it is not required. Feel free to copy-paste as you please without concern of allegations of theft or litigation.
 
-When learning in a live project:
+Following a consistent template to make things easy, you can get up and running in just a few seconds. When learning how to implement design in a live project:
 
-- 😡 Progress is slow and must be high-quality.
-- 😭 Making big changes often has big consequences.
-- 🚨 Your whole team needs to know how things work.
+- 😡 Progress is slow and MUST be high-quality.
+- 😭 Making small changes often has big consequences.
+- 🚨 Your whole team needs to understand.
 
 But, by learning with the help of the template you:
 
