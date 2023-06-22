@@ -34,6 +34,8 @@ The ⚪ madewithcode framework was designed with high-levels of opinion and was 
 > Warning:
 > Although providing credit or including a tag is appreciated, it is not required. You can use this code as well as the built project at your free will and interest. Feel free to copy-paste as you please without concern of allegations of theft or litigation.
 
+If you make improvements to the framework, please do submit a Pull Request so that everyone can benefit from your great work.
+
 ## Dependencies
 
 The base of the framework has been built using:
@@ -42,8 +44,6 @@ The base of the framework has been built using:
 - 👁️ React (for VDOM rendering)
 - 🖼️ Framer Motion (for component animations)
 - 💨 Motion Canvas (for code animations)
-
-If you make improvements to the framework, please do submit a Pull Request so that everyone can benefit from your great work.
 
 > Note:
 > 🚨 Everything below here is a work in progress as we approach `0.0.1`.
