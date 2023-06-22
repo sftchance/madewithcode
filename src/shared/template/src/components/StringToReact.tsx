@@ -1,35 +1,39 @@
-import React, { useRef } from 'react';
+import React, { useRef } from "react";
 
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
-import Context from '../utils/context';
+import Context from "../utils/context";
 
 const getContext = (options: any) => new Context(options);
 
 interface StringToReactProps {
-    data?: object;
-    babelOptions?: object;
+	data?: object;
+	babelOptions?: object;
 }
 
-const StringToReact: React.FC<React.PropsWithChildren<StringToReactProps>> = (props) => {
-    const ref = useRef<Context | null>(null);
+const StringToReact: React.FC<React.PropsWithChildren<StringToReactProps>> = (
+	props
+) => {
+	const ref = useRef<Context | null>(null);
 
-    if (!ref.current) ref.current = getContext(React);
+	if (!ref.current) ref.current = getContext(React);
 
-    const babelOptions = props.babelOptions || {};
+	const babelOptions = props.babelOptions || {};
 
-    const Generated = ref.current.updateTemplate(props.children as string, babelOptions).getComponent();
+	const Generated = ref.current
+		.updateTemplate(props.children as string, babelOptions)
+		.getComponent();
 
-    if (!Generated) return null;
+	if (!Generated) return null;
 
-    const data = props.data || {};
+	const data = props.data || {};
 
-    return <Generated {...data} />;
-}
+	return <Generated {...data} />;
+};
 
 StringToReact.propTypes = {
-    data: PropTypes.object,
-    babelOptions: PropTypes.object,
+	data: PropTypes.object,
+	babelOptions: PropTypes.object,
 };
 
 export default StringToReact;

@@ -1,38 +1,103 @@
-@import url('https://fonts.cdnfonts.com/css/ia-writer-quattro-s');
+@import url("https://fonts.cdnfonts.com/css/ia-writer-quattro-s");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-    font-family: 'iA Writer Quattro S', sans-serif;
-    line-height: 1.5;
-    font-weight: 400;
+	font-family: "iA Writer Quattro S", sans-serif;
+	line-height: 1.5;
+	font-weight: 400;
 
-    color-scheme: light dark;
-    color: rgba(0, 0, 0, 0.87);
-    background-color: #ffffff;
+	color-scheme: light dark;
+	color: rgba(0, 0, 0, 0.87);
+	background-color: #ffffff;
 
-    font-synthesis: none;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-text-size-adjust: 100%;
+	font-synthesis: none;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-text-size-adjust: 100%;
+}
+
+* {
+	font-family: inherit;
 }
 
 html {
-    overflow-y: scroll;
-    overflow-x: hidden;
-    box-sizing: border-box;
-    scroll-behavior: smooth;
-    text-size-adjust: 100%;
+	overflow-x: hidden;
+	box-sizing: border-box;
+	scroll-behavior: smooth;
+	text-size-adjust: 100%;
 
-    -webkit-tap-highlight-color: transparent;
-    -webkit-text-size-adjust: 100%;
+	-webkit-tap-highlight-color: transparent;
+	-webkit-text-size-adjust: 100%;
 }
 
 body {
-    margin: 0;
-    width: 100%;
-    min-height: 100vh;
+	margin: 0;
+	width: 100%;
+	min-height: 100vh;
 }
+
+::-webkit-scrollbar {
+	width: 0.5rem;
+	height: 0.35rem;
+
+	background-color: rgba(0, 0, 0, 1);
+}
+
+::-webkit-scrollbar-track {
+	background-color: rgba(0, 0, 0, 1);
+}
+
+::-webkit-scrollbar-thumb {
+	background-color: rgba(255, 255, 255, 0.1);
+	border-radius: 0.25rem;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background-color: rgba(255, 255, 255, 0.15);
+	cursor: pointer;
+}
+
+::-webkit-scrollbar-thumb:active {
+	background-color: rgba(255, 255, 255, 0.3);
+}
+
+::-webkit-scrollbar-corner {
+	background-color: rgba(0, 0, 0, 1);
+}
+
+::-webkit-scrollbar-corner:vertical {
+	height: 0.5rem;
+}
+
+::-webkit-scrollbar-corner:horizontal {
+	width: 0.5rem;
+}
+
+::-webkit-scrollbar-button,
+::-webkit-scrollbar-button:start,
+::-webkit-scrollbar-button:end {
+	display: none;
+}
+
+::-webkit-scrollbar-track-piece {
+	background-color: rgba(0, 0, 0, 1);
+}
+
+/* pre {
+    font-family: 'iA Writer Quattro S', sans-serif;
+    font-size: 12px;
+    line-height: 1.5;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.87);
+    background-color: #ffffff;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid #e2e8f0;
+    margin: 1rem 0;
+} */

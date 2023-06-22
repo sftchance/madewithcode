@@ -12,5 +12,8 @@
   "license": "UNLICENSED",
   "dependencies": {
     "pnpm": "^8.6.2"
+  },
+  "devDependencies": {
+    "react-hotkeys-hook": "^4.4.0"
   }
 }

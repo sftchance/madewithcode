@@ -1,228 +1,356 @@
-import { Link, useNavigate, useParams } from "react-router-dom"
+import { tokyoNightInit } from "@uiw/codemirror-theme-tokyo-night";
+import CodeMirror from "@uiw/react-codemirror";
 
+import { javascript } from "@codemirror/lang-javascript";
+import { tags as t } from "@lezer/highlight";
+
+import { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+
+import { useHotkeys } from "react-hotkeys-hook";
+
+import { useDiff } from "../hooks/useDiff";
 import { useProjects } from "../hooks/useProject";
 
 import { Preview } from "../components/Preview";
-import { useState } from "react";
+import { useClipboard } from "../hooks/useClipboard";
+
+// TODO: Implement help modal
 
 export const Sandbox: React.FC = () => {
-    const navigate = useNavigate();
+	const navigate = useNavigate();
 
-    const { id } = useParams()
+	const { id } = useParams();
 
-    const {
-        projects,
-        project,
-        count,
-        page,
-        hasNext,
-        move,
-    } = useProjects({ id });
+	const { clipboard, copied } = useClipboard();
 
-    const [width, setWidth] = useState("1080");
-    const [height, setHeight] = useState("1920");
+	const { projects, project, count, page, hasPrev, hasNext, move } =
+		useProjects({
+			id,
+		});
 
-    const [isCopied, setIsCopied] = useState(false);
-    const [isSettingsCollapsed, setIsSettingsCollapsed] = useState(true);
+	const { changes, animations } = useDiff({ project });
 
-    if (!project) return <div className="p-6 bg-black text-white min-h-screen space-y-2 flex items-center justify-center w-full transition-all">
-        <div className="max-w-md w-full mx-auto">
-            <h2 className="mb-4">
-                Projects
-                <span className="text-sm text-gray-400"> ({count})</span>
-            </h2>
+	const [isSceneCollapsed, setIsSceneCollapsed] = useState(true);
 
-            {projects.map((project, index) => {
-                return <Link key={index} className="cursor-pointer w-full" to={`/${project.name}/`}>
-                    <div className="flex bg-gray-900 rounded-lg mb-2 hover:bg-gray-800 transition-all cursor-pointer">
-                        <p className="p-2 px-4 bg-gray-800 text-slate-300 rounded-lg text-md whitespace-wrap transition-all w-4/12">{project.name}</p>
-                        <p className="p-2 px-4 text-slate-500 text-sm text-justify whitespace-wrap overflow-hidden overflow-ellipsis w-8/12">{project.description}</p>
-                    </div>
-                </Link>
-            })}
+	useHotkeys("ctrl+h", () => {
+		navigate("/");
+	});
 
-            <div className="flex space-x-4 text-sm mt-4">
-                <button
-                    className="bg-gray-800 rounded-lg p-1 px-2 text-gray-300 hover:text-gray-100 hover:bg-gray-700 disabled:bg-gray-900 disabled:text-gray-500 transition-all"
-                    onClick={() => move(-1)}
-                    disabled={page === 1}
-                >{`${"<"}`}</button>
-                <p className="p-1 px-2">{page}</p>
-                <button
-                    className="bg-gray-800 rounded-lg p-1 px-2 text-gray-300 hover:text-gray-100 hover:bg-gray-700 disabled:bg-gray-900 disabled:text-gray-500 transition-all"
-                    onClick={() => move(1)}
-                    disabled={!hasNext}
-                >{`${">"}`}</button>
-            </div>
-        </div>
-    </div>
+	useHotkeys(
+		"ctrl+l",
+		() => {
+			if (project || projects.length === 0) return;
 
-    return (
-        <div className="flex flex-col p-6 bg-black text-white h-screen">
-            <div className="flex space-x-4 text-sm mb-4 items-center  whitespace-nowrap overflow-hidden overflow-ellipsis">
-                <button
-                    className="bg-gray-800 rounded-lg p-1 px-2 text-gray-300 hover:text-gray-100 hover:bg-gray-700 disabled:bg-gray-900 disabled:text-gray-500 transition-all"
-                    onClick={() => navigate("/")}
-                >
-                    {`${"<"}`}
-                </button>
+			navigate(`/${projects[0].name}/`);
+		},
+		[projects, project]
+	);
 
-                <h2 className="text-center">
-                    {project.name || "Not Found"}
+	useHotkeys(
+		"ctrl+i",
+		() => {
+			setIsSceneCollapsed((prev) => !prev);
+		},
+		[isSceneCollapsed]
+	);
 
-                </h2>
-            </div>
+	useHotkeys(
+		"ctrl+j",
+		() => {
+			if (hasPrev) move(-1);
+		},
+		[page, page, count]
+	);
 
-            <div className="flex items-center justify-center max-w-lg m-auto">
-                {project.steps.length > 0
-                    ? <Preview code={project.steps[page - 1]?.code} />
-                    : <p
-                        className="text-center text-slate-500 text-sm whitespace-wrap overflow-hidden overflow-ellipsis w-8/12 transition-all cursor-pointer hover:text-slate-400"
-                    >// TODO: Write component.</p>
-                }
-            </div>
+	useHotkeys(
+		"ctrl+k",
+		() => {
+			if (hasNext) move(1);
+		},
+		[hasNext, page, count]
+	);
 
-            <div className="flex items-center mb-4 text-sm">
-                <button
-                    className={`bg-gray-800 rounded-l-lg p-1 px-4 hover:text-gray-100 disabled:bg-gray-900 disabled:text-gray-500 transition-all text-gray-300 hover:bg-gray-700`}
-                    onClick={() => {
-                        navigator.clipboard.writeText(project.steps[page - 1]?.code || "");
+	useHotkeys(".", () => {
+		console.log("???????????");
+	});
 
-                        setIsCopied(true);
-                    }}
-                    onMouseLeave={() => {
-                        if (!isCopied) return;
+	useEffect(() => {
+		setIsSceneCollapsed(true);
+	}, [id]);
 
-                        setTimeout(() => setIsCopied(false), 1500);
-                    }}
-                >
-                    Export
-                </button>
+	if (!project)
+		return (
+			<div className="flex min-h-screen w-full items-center justify-center space-y-2 bg-black p-6 text-white transition-all">
+				<div className="mx-auto w-full max-w-md">
+					<h2 className="mb-4">
+						Projects
+						<span className="text-sm text-slate-400">
+							{" "}
+							({count})
+						</span>
+					</h2>
 
-                <select className="bg-gray-900 p-1 px-2 text-gray-400 hover:text-gray-100 hover:bg-gray-700 disabled:bg-gray-900 
-                    disabled:text-gray-500 transition-all">
-                    {project.steps.map((_, i) => <option key={i} value={i + 1}>#{i + 1}</option>)}
-                </select>
+					{projects.map((project, index) => {
+						return (
+							<Link
+								key={index}
+								className="w-full cursor-pointer"
+								to={`/${project.name}/`}
+							>
+								<div className="mb-2 flex cursor-pointer rounded-lg bg-gray-900 transition-all hover:bg-gray-800">
+									<p className="text-md whitespace-wrap w-4/12 rounded-lg bg-gray-800 p-2 px-4 text-slate-300 transition-all">
+										{project.name}
+									</p>
+									<p className="whitespace-wrap w-8/12 overflow-hidden overflow-ellipsis p-2 px-4 text-justify text-sm text-slate-500">
+										{project.description}
+									</p>
+								</div>
+							</Link>
+						);
+					})}
 
-                {project.steps.length > 1 && <>
-                    <p className="text-gray-700 bg-gray-900 p-1 pl-4">-</p>
+					<div className="mt-4 flex space-x-4 text-sm">
+						<button
+							className="rounded-lg bg-gray-800 p-1 px-2 text-slate-300 transition-all hover:bg-gray-700 hover:text-slate-100 disabled:bg-gray-900 disabled:text-slate-500"
+							onClick={() => move(-1)}
+							disabled={page === 1}
+						>{`${"<"}`}</button>
+						<p className="p-1 px-2">{page}</p>
+						<button
+							className="rounded-lg bg-gray-800 p-1 px-2 text-slate-300 transition-all hover:bg-gray-700 hover:text-slate-100 disabled:bg-gray-900 disabled:text-slate-500"
+							onClick={() => move(1)}
+							disabled={!hasNext}
+						>{`${">"}`}</button>
+					</div>
+				</div>
+			</div>
+		);
 
-                    <select className="bg-gray-900 p-1 px-2 text-gray-400 hover:text-gray-100 hover:bg-gray-700 disabled:bg-gray-900 
-                    disabled:text-gray-500 transition-all">
-                        {project.steps
-                            .slice(-1)
-                            .map((_, i) => <option key={count + i} value={count - i}>#{count - i}</option>)}
-                    </select>
-                </>}
+	return (
+		<div className="flex h-screen flex-row">
+			<div className="flex h-full w-full flex-col bg-black p-6 text-white">
+				<div className="mb-4 flex flex-row items-center justify-center space-x-4 overflow-hidden overflow-ellipsis whitespace-nowrap text-sm">
+					<button
+						className="rounded-lg bg-gray-800 p-1 px-2 text-slate-300 transition-all hover:bg-gray-700 hover:text-slate-100 disabled:bg-gray-900 disabled:text-slate-500"
+						onClick={() => navigate("/")}
+					>
+						{`${"<"}`}
+					</button>
 
-                <select className="bg-gray-900 rounded-r-lg p-1 px-4 text-gray-400 hover:text-gray-100 hover:bg-gray-700 disabled:bg-gray-900 disabled:text-gray-500 transition-all">
-                    <option value="this">.png</option>
-                    <option value="all">.mp4</option>
-                </select>
+					<h2 className="w-full">{project.name || "Not Found"}</h2>
 
-                <div className="flex items-center w-min ml-auto">
-                    <div className="flex relative">
-                        <div className={`flex-col space-y-2 absolute right-0 h-full bg-gray-900 rounded-lg transition-all ${isSettingsCollapsed ? "hidden" : "flex"}`} style={{ height: "-200%" }}>
-                            <div className="flex">
-                                <label className="p-1 px-2 bg-gray-800 text-gray-400 rounded-l-lg">Width</label>
-                                <input
-                                    className="bg-gray-900 p-1 px-2 text-gray-300 hover:text-gray-100 hover:bg-gray-700 disabled:bg-gray-900 disabled:text-gray-500 transition-all w-full"
-                                    type="number"
-                                    value={width}
-                                    onChange={e => setWidth(e.target.value)}
-                                />
-                                <p className="p-1 px-2 bg-gray-900 text-gray-400 rounded-r-lg">px</p>
-                            </div>
+					<button
+						className="ml-auto rounded-lg bg-gray-800 p-1 px-2 text-slate-300 transition-all hover:bg-gray-700 hover:text-slate-100 disabled:bg-gray-900 disabled:text-slate-500"
+						onClick={() => setIsSceneCollapsed(!isSceneCollapsed)}
+					>
+						🔬 Scene
+					</button>
+				</div>
 
-                            <div className="flex w-full">
-                                <label className="p-1 px-2 bg-gray-800 text-gray-400 rounded-l-lg">Height</label>
-                                <input
-                                    className="bg-gray-900 p-1 px-2 text-gray-300 hover:text-gray-100 hover:bg-gray-700 disabled:bg-gray-900 disabled:text-gray-500 transition-all w-full"
-                                    type="number"
-                                    value={height}
-                                    onChange={e => setHeight(e.target.value)}
-                                />
-                                <p className="p-1 px-2 bg-gray-900 text-gray-400 rounded-r-lg">px</p>
-                            </div>
+				<div className="m-auto flex max-w-lg items-center justify-center">
+					{project.steps.length > 0 ? (
+						<Preview code={project.steps[page - 1]?.code} />
+					) : (
+						<p className="whitespace-wrap w-8/12 cursor-pointer overflow-hidden overflow-ellipsis text-center text-sm text-slate-500 transition-all hover:text-slate-400">
+							// TODO: Write component.
+						</p>
+					)}
+				</div>
 
-                            <div className="flex">
-                                <label className="p-1 px-2 bg-gray-800 text-gray-400 rounded-l-lg">Duration</label>
-                                <input
-                                    className="bg-gray-900 p-1 px-2 text-gray-300 hover:text-gray-100 hover:bg-gray-700 disabled:bg-gray-900 disabled:text-gray-500 transition-all w-20"
-                                    type="number"
-                                    value={30}
-                                    onChange={e => setHeight(e.target.value)}
-                                />
-                                <p className="p-1 px-2 bg-gray-900 text-gray-400 rounded-r-lg">secs.</p>
-                            </div>
+				{/* <div className="flex flex-row items-center justify-between"> */}
+				{/* <div className="mb-4 flex items-center">
+						<button
+							className={`rounded-l-lg bg-gray-800 p-1 px-4 text-slate-300 transition-all hover:bg-gray-700 hover:text-slate-100 disabled:bg-gray-900 disabled:text-slate-500`}
+						>
+							📸 Export
+						</button>
 
-                            {/* <div className="flex">
-                                <input
-                                    className="bg-gray-800 p-1 px-2 text-gray-300 hover:text-gray-100 hover:bg-gray-700 disabled:bg-gray-900 disabled:text-gray-500 transition-all w-max"
-                                    type="number"
-                                    value={height}
-                                    onChange={e => setHeight(e.target.value)}
-                                />
-                                <p className="p-1 px-2 bg-gray-800 text-gray-400 rounder-r-lg">px</p>
-                            </div> */}
-                        </div>
+						<select
+							className="bg-gray-900 p-1 px-2 text-slate-400 transition-all hover:bg-gray-700 hover:text-slate-100 
+                    disabled:bg-gray-900 disabled:text-slate-500"
+						>
+							{project.steps.map((_, i) => (
+								<option key={i} value={i + 1}>
+									#{i + 1}
+								</option>
+							))}
+						</select>
 
-                        <button
-                            className={`ml-4 bg-gray-800 rounded-lg p-1 px-4 hover:text-gray-100 disabled:bg-gray-900 disabled:text-gray-500 transition-all text-gray-300 hover:bg-gray-700 text-md`}
-                            onClick={() => { setIsSettingsCollapsed(!isSettingsCollapsed) }}
-                        >
-                            Settings
-                        </button>
-                    </div>
-                </div>
-            </div>
+						{project.steps.length > 1 && (
+							<>
+								<p className="bg-gray-900 p-1 pl-4 text-slate-700">
+									-
+								</p>
 
-            <div className="flex items-center w-full">
-                <div className="flex space-x-4 text-sm">
-                    <button
-                        className="bg-gray-800 rounded-lg p-1 px-2 text-gray-300 hover:text-gray-100 hover:bg-gray-700 disabled:bg-gray-900 disabled:text-gray-500 transition-all"
-                        onClick={() => move(-1)}
-                        disabled={page === 1}
-                    >
-                        {`${"<"}`}
-                    </button>
-                    <p className="p-1 px-2 text-gray-400">{page} / {project.steps.length}</p>
-                    <button
-                        className="bg-gray-800 rounded-lg p-1 px-2 text-gray-300 hover:text-gray-100 hover:bg-gray-700 disabled:bg-gray-900 disabled:text-gray-500 transition-all"
-                        onClick={() => move(1)}
-                        disabled={page > project.steps.length - 1}
-                    >
-                        {`${">"}`}
-                    </button>
-                </div>
+								<select
+									className="bg-gray-900 p-1 px-2 text-slate-400 transition-all hover:bg-gray-700 hover:text-slate-100 
+                    disabled:bg-gray-900 disabled:text-slate-500"
+								>
+									{project.steps.slice(-1).map((_, i) => (
+										<option
+											key={count + i}
+											value={count - i}
+										>
+											#{count - i}
+										</option>
+									))}
+								</select>
+							</>
+						)}
 
-                {/* <p className="text-sm text-gray-400 ml-6">
-                    (00:{project.steps.reduce((acc, step) => acc + (step.duration || 0), 0)})</p> */}
-                <div className="ml-auto text-sm">
-                    <button
-                        className={`ml-4 bg-gray-800 rounded-lg p-1 px-2 hover:text-gray-100 disabled:bg-gray-900 disabled:text-gray-500 transition-all ${isCopied ? "text-gray-100 bg-green-500" : "text-gray-300 hover:bg-gray-700"}`}
-                        onClick={() => {
-                            navigator.clipboard.writeText(project.steps[page - 1]?.code || "");
+						<select className="rounded-r-lg bg-gray-900 p-1 px-4 text-slate-400 transition-all hover:bg-gray-700 hover:text-slate-100 disabled:bg-gray-900 disabled:text-slate-500">
+							<option value="this">.png</option>
+							<option value="all">.mp4</option>
+						</select>
+					</div> */}
 
-                            setIsCopied(true);
-                        }}
-                        onMouseLeave={() => {
-                            if (!isCopied) return;
+				<div className="flex items-center">
+					<p className="text-sm text-slate-500">
+						Press '<span className="text-slate-100">.</span>' for
+						help.
+					</p>
 
-                            setTimeout(() => setIsCopied(false), 1500);
-                        }}
-                    >
-                        {`${"</>"}`}
-                    </button>
+					<div className="ml-auto flex space-x-4 text-sm">
+						<button
+							className="rounded-lg bg-gray-800 p-1 px-2 text-slate-300 transition-all hover:bg-gray-700 hover:text-slate-100 disabled:bg-gray-900 disabled:text-slate-500"
+							onClick={() => move(-1)}
+							disabled={page === 1}
+						>
+							{`${"<"}`}
+						</button>
+						<p className="p-1 px-2 text-slate-400">
+							{page} / {project.steps.length}
+						</p>
+						<button
+							className="rounded-lg bg-gray-800 p-1 px-2 text-slate-300 transition-all hover:bg-gray-700 hover:text-slate-100 disabled:bg-gray-900 disabled:text-slate-500"
+							onClick={() => move(1)}
+							disabled={page > project.steps.length - 1}
+						>
+							{`${">"}`}
+						</button>
+					</div>
+				</div>
+			</div>
 
-                    <button
-                        className={`ml-4 bg-gray-800 rounded-lg p-1 px-4 hover:text-gray-100 disabled:bg-gray-900 disabled:text-gray-500 transition-all text-gray-300 hover:bg-gray-700 text-md`}
-                    >
-                        ?
-                    </button>
-                </div>
-            </div>
+			<div
+				className={`flex h-full max-w-3xl flex-col space-y-4 border-l-2 border-double border-slate-700 bg-black text-sm text-white transition-all 
+                ${
+					isSceneCollapsed
+						? "w-0 p-0 opacity-0"
+						: "opacity-1 w-full p-6"
+				}`}
+			>
+				<div className="flex h-full flex-col space-y-4">
+					<p className="flex items-center space-x-2 text-slate-400">
+						Changes
+						<button
+							className={`ml-auto rounded-lg bg-gray-800 p-1 px-2 transition-all hover:text-slate-100 disabled:bg-gray-900 disabled:text-slate-500 ${
+								copied["changes"]
+									? "bg-green-500 text-slate-100"
+									: "text-slate-300 hover:bg-gray-700"
+							}`}
+							onClick={
+								clipboard(
+									"changes",
+									project.steps[page - 1]?.code || ""
+								).onCopy
+							}
+							onMouseLeave={clipboard("changes").onLeave}
+						>
+							📋 {copied["changes"] ? "Copied" : "Copy"}
+						</button>
+					</p>
 
-        </div >
-    );
-}
+					<ol className="h-full space-y-2 overflow-y-scroll">
+						{changes &&
+							changes[page - 1]
+								.filter(
+									(change) => change.added || change.removed
+								)
+								.map((change, index) => {
+									return (
+										<li
+											key={index}
+											className={`flex cursor-pointer rounded-sm border border-solid p-1 px-2 transition-all ease-in-out ${
+												change.added
+													? "border-green-700 bg-green-900 text-green-300 hover:border-green-600 hover:bg-green-800 hover:text-green-200"
+													: "border-red-700 bg-red-900 text-red-300 hover:border-red-600 hover:bg-red-800 hover:text-red-200"
+											}`}
+										>
+											<span className="w-12">
+												{index + 1}.
+											</span>
+											<span
+												className={`w-12 ${
+													change.added
+														? "text-green-600"
+														: "text-red-600"
+												}`}
+											>
+												{change.added ? "+" : ""}
+												{change.removed ? "-" : ""}
+												{change.count}
+											</span>
+											<span>{change.value}</span>
+										</li>
+									);
+								})}
+					</ol>
+
+					<p className="flex items-center space-x-4 border-t-2 border-double border-slate-700 pt-2 text-slate-400">
+						Animation Code
+						<button
+							className={`ml-auto rounded-lg bg-gray-800 p-1 px-2 transition-all hover:text-slate-100 disabled:bg-gray-900 disabled:text-slate-500 ${
+								copied["animation"]
+									? "bg-green-500 text-slate-100"
+									: "text-slate-300 hover:bg-gray-700"
+							} `}
+							onClick={
+								clipboard(
+									"animation",
+									project.steps[page - 1]?.code || ""
+								).onCopy
+							}
+							onMouseLeave={clipboard("animation").onLeave}
+						>
+							📋 {copied["animation"] ? "Copied" : "Copy"}
+						</button>
+					</p>
+
+					<CodeMirror
+						value={(animations && animations[page - 1]) || ""}
+						className="bg-black text-black"
+						extensions={[javascript({ jsx: true })]}
+						editable={false}
+						theme={tokyoNightInit({
+							styles: [{ tag: t.comment, color: "#6272a4" }],
+							settings: {
+								caret: "#c6c6c6",
+								fontFamily: "monospace",
+								background: "#000",
+								gutterBackground: "#000",
+								lineHighlight: "#1e1e1e",
+								selection: "#1e1e1e",
+								selectionMatch: "#1e1e1e",
+							},
+						})}
+					/>
+
+					<p className="flex items-center space-x-4 border-t-2 border-double border-slate-700 pt-2 text-slate-400">
+						Scene Preview
+						<button className="ml-auto rounded-lg bg-gray-800 p-1 px-2 text-slate-300 transition-all hover:bg-gray-700 hover:text-slate-100 disabled:bg-gray-900 disabled:text-slate-500">
+							👁️ View
+						</button>
+					</p>
+
+					<div className="min-h-20 justify-content align-items flex w-full items-center rounded-lg bg-gray-900 p-6 text-center">
+						<p className="w-full text-center text-slate-700">
+							// TODO: Preview goes here
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
+};
