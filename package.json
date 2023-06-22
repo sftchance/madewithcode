@@ -1,19 +1,12 @@
 {
-  "name": "madewithcode",
-  "version": "1.0.0",
-  "description": "To create the folder for the next day all you have to do is run:",
-  "main": "new.js",
-  "scripts": {
-    "build": "tsc",
-    "new": "node src/shared/new.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "sftchance",
-  "license": "UNLICENSED",
-  "dependencies": {
-    "pnpm": "^8.6.2"
-  },
-  "devDependencies": {
-    "react-hotkeys-hook": "^4.4.0"
-  }
+    "name": "madewithcode",
+    "version": "1.0.0",
+    "description": "The ⚪ madewithcode framework is designed to enable a pipeline of development to content in under 30 minutes.",
+    "scripts": {
+        "build": "tsc",
+        "new": "node src/shared/new.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "sftchance",
+    "license": "AGPL-3.0-or-later"
 }
