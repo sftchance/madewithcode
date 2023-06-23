@@ -1,4 +1,8 @@
 ☐ Get the voice transcription working.
+    ✔ Download the training clips. @done(23-06-23 12:21)
+    ☐ Train the model.
+    ☐ Test with an auto-generated voice.
+    ☐ Test with a spoken voice.
 ☐ Build the full code animation script that is used for Motion Canvas.
 ☐ Connect the render button of both systems so that they both export on the same settings and button click.
     ☐ Figure out how to get an export of our functional component.
