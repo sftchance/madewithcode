@@ -53,8 +53,6 @@ First, let's break the idea that the below steps are all separate. In reality, t
 
 By default, when you create a new scene it will include some basic boilerplate. If you're ever lost just play around a little. It is really simple to understand once you see it live. With the basics already there you can follow along in place.
 
-Now, important to note here that the Sandbox will give you all the final outputs needed to go to a video encoder. I did not go through the effort of building a video encoder into the framework because I wanted to give you the freedom to choose your own. I personally use [DaVinci Resolve](https://www.blackmagicdesign.com/products/davinciresolve/) but you can use whatever you want.
-
 ### Projects
 
 At the core of the ⚪ madewithcode content is the idea that evergreen content has a long lifecycle not just in the social ecosystem, but in our personal development toolkit. Therefore, the Sandbox app has been developed in a way that enables the use of the same codebase for multiple projects. This allows for the reuse of code and the ability to reference previous projects in future projects.
@@ -127,3 +125,9 @@ export default project;
 ```
 
 With just the simple configuration, you can create a solid video fit for your brand in just a couple of minutes.
+
+## Author Note
+
+Now, important to note here that the Sandbox will give you all the final outputs needed to go to a video encoder. I did not go through the effort of building a video encoder into the framework because I wanted to give you the freedom to choose your own. I personally use [DaVinci Resolve](https://www.blackmagicdesign.com/products/davinciresolve/) but you can use whatever you want.
+
+This is not meant as a package to replace Motion Canvas, Framer or any other dependency you can use. Rather, this is a tool to help you use the tools at our disposal in the most effective way possible.
