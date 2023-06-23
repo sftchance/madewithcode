@@ -1,0 +1,11 @@
+☐ Get the voice transcription working.
+☐ Build the full code animation script that is used for Motion Canvas.
+☐ Connect the render button of both systems so that they both export on the same settings and button click.
+    ☐ Figure out how to get an export of our functional component.
+    ☐ Figure out how to export each scene.
+☐ Get the scene preview working.
+    Notes: I don't really care about this as this point because it isn't even really needed.
+
+Archive:
+  ✔ Make sure the animation code looks good and is what we want before moving on. @done(23-06-23 10:00)
+    Notes: Surprisingly things actually worked on the first try. I am sure we will make improvements through the next few weeks, but for now the output is clean enough to keep moving.

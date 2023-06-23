@@ -41,7 +41,7 @@ If you make improvements to the framework, please do submit a Pull Request so th
 The base of the framework has been built using:
 
 - ⬆️ Vite (for application bundling)
-- 👁️ React (for VDOM rendering)
+- 👁️ React (for Virtual DOM rendering)
 - 🖼️ [Framer Motion](https://www.framer.com/motion/transition/) (for component animations)
 - 💨 [Motion Canvas](https://motioncanvas.io/) (for code animations)
 
@@ -91,6 +91,8 @@ This can seem overwhelming at the beginning so let me show you how simple it act
 
 import { Project } from "./types";
 
+import voiceOver from "./voice-over.mp3";
+
 const project: Project = {
   name: "Day #000",
   description: "Establish the pipeline for ⚪ madewithcode.",
@@ -124,10 +126,17 @@ const project: Project = {
 export default project;
 ```
 
-With just the simple configuration, you can create a solid video fit for your brand in just a couple of minutes.
+With just the simple configuration, you can create a solid foundation of content in just a couple of minutes.
 
-## Author Note
+## Frequently Asked Questions
 
-Now, important to note here that the Sandbox will give you all the final outputs needed to go to a video encoder. I did not go through the effort of building a video encoder into the framework because I wanted to give you the freedom to choose your own. I personally use [DaVinci Resolve](https://www.blackmagicdesign.com/products/davinciresolve/) but you can use whatever you want.
-
-This is not meant as a package to replace Motion Canvas, Framer or any other dependency you can use. Rather, this is a tool to help you use the tools at our disposal in the most effective way possible.
+- **Why is this not a package?**
+  - I wanted to make this as easy as possible to get started with. By using a package, you would have to install it and then configure it. This way, you can just clone the repo and get started while it is currently in hot-development. Things are changing often and backwards compatibility is not a priority.
+- **Why not use {X}?**
+  - The library is lackluster and has an awful syntax. The core of animation is expected to be done in Motion Canvas. This is because it is a much more powerful tool than Framer Motion. Framer Motion is used for the component animations and Motion Canvas is used for the video animations.
+- **How is Framer Motion used?**
+  - In the Sandbox you can use Framer Motion to animate the components that you are developing, scoped strictly to the component. This is not used for the video animations. When you export the render of your component, the Sandbox will handle the interpolation between frames and save your animated component output.
+- **What if I want to make an animation not inside a specific scene?**
+  - You can create a new project and approach it as one-off or follow the recommended path of implementing that animation in Motion Canvas.
+- **Do I still have to edit the final video?**
+  - Yes, you do, but you already have all the core components of your output so it is just a matter of assembling and organizing the content you've created.
