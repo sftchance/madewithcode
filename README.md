@@ -36,17 +36,14 @@ The ⚪ madewithcode framework was designed with high-levels of opinion and was 
 
 If you make improvements to the framework, please do submit a Pull Request so that everyone can benefit from your great work.
 
-## Dependencies
+### Dependencies
 
 The base of the framework has been built using:
 
 - ⬆️ Vite (for application bundling)
 - 👁️ React (for VDOM rendering)
-- 🖼️ Framer Motion (for component animations)
-- 💨 Motion Canvas (for code animations)
-
-> Note:
-> 🚨 Everything below here is a work in progress as we approach `0.0.1`.
+- 🖼️ [Framer Motion](https://www.framer.com/motion/transition/) (for component animations)
+- 💨 [Motion Canvas](https://motioncanvas.io/) (for code animations)
 
 ## Projects
 
@@ -60,7 +57,16 @@ npm run project
 
 Instantly, you have a pre-configured project where you can write your Scenes with access to all the utilities that you have already developed.
 
-## Code Scenes
+## Scenes
+
+Inside every project there is a set of scenes that are used to develop the larger piece of content. At the core, a scene is composed of several things but we can boil them down simply into two core pieces:
+
+1. The configuration.
+2. The component.
+
+Inside the configuration we define values that control the visualization experience of this component. Then, as the component we declare a string representation of the active component so that the automatic interpolation between scenes can be calculated through `diff`.
+
+To create a new scene simply run:
 
 ```bash
 npm run scene
