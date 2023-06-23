@@ -13,13 +13,6 @@ const PROJECTS: Project[] = [
 			{
 				duration: 1.2,
 				code: `(props) => {
-    const { useState } = React;
-    const [counter, setCounter] = useState(0);
-
-    const increase = () => {
-        setCounter(counter + 1);
-    };
-
     return (<>
         <h1>Hello world</h1>
     </>);
@@ -28,13 +21,6 @@ const PROJECTS: Project[] = [
 			{
 				duration: 1.2,
 				code: `(props) => {
-    const { useState } = React;
-    const [counter, setCounter] = useState(0);
-
-    const increase = () => {
-        setCounter(counter + 1);
-    };
-
     return (<>
         <h1>Goodnight</h1>
     </>);
